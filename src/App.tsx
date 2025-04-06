@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { Foro } from "./components";
 import { postMessage, getMessages } from "./api/mensajes.ts";
+import { supabase } from "./supabase/client";
+import { useNavigate } from "react-router-dom";
 
 interface MessageType {
   id: number;
@@ -8,9 +10,30 @@ interface MessageType {
 }
 
 const App = () => {
+
+  const navigate = useNavigate();
+
   const [mensaje, setMensaje] = useState<MessageType[]>([]);
   const [inputValue, setInputValue] = useState<string>("");
   const [error, setError] = useState<unknown>();
+  
+
+  //
+  useEffect(() => {
+    supabase.auth.onAuthStateChange((_event, session) => {
+      if (!session) {
+        navigate('/login')
+      } else{
+        navigate('/')
+      }
+    })
+
+  }, [])
+
+
+
+
+  //
 
   useEffect(() => {
     listMessages();
