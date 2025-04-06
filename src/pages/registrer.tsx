@@ -14,7 +14,7 @@ function Register() {
     setErrorMsg("");
     setSuccessMsg("");
 
-    const { data, error } = await supabase.auth.signUp({
+    const { data: _, error } = await supabase.auth.signUp({
       email,
       password,
     });
