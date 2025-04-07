@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "server": "nodemon backend/index.js"
   },
   "dependencies": {
     "@nextui-org/react": "^2.6.11",
@@ -15,6 +16,8 @@
     "@supabase/supabase-js": "^2.49.4",
     "@tailwindcss/vite": "^4.0.12",
     "axios": "^1.8.2",
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-redux": "^9.2.0",
@@ -30,6 +33,7 @@
     "eslint": "^8.57.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.6",
+    "nodemon": "^3.1.9",
     "typescript": "^5.2.2",
     "vite": "^5.2.0"
   }
