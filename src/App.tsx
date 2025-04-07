@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Foro } from "./components";
 import { postMessage, getMessages } from "./api/mensajes.ts";
-import { supabase } from "../supabase/client.ts";
+import { supabase } from "./supabase/client.ts";
 import { useNavigate } from "react-router-dom";
 
 interface MessageType {

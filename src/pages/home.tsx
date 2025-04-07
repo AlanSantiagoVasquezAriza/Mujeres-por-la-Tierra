@@ -1,4 +1,4 @@
-import { supabase } from "../../supabase/client";
+import { supabase } from "../supabase/client";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
