@@ -8,7 +8,7 @@
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "server": "nodemon backend/index.js"
+    "server": "nodemon backend/node/index.js"
   },
   "dependencies": {
     "@nextui-org/react": "^2.6.11",
