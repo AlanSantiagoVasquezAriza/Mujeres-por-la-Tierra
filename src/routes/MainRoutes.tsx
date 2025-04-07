@@ -21,7 +21,7 @@ export const MainRoutes: RouteObject[] = [
   },
 
   {
-    path: "/foros",
+    path: "/foro",
     element: <App />,
 
   },
