@@ -4,6 +4,8 @@ import { createReport, getReports, updateReport, deleteReport} from "../controll
 const router = Router();
 
 router.post("/api/reports", createReport);
+
+  
 router.get("/api/reports", getReports);
 router.delete("/api/reports/:id", deleteReport);
 router.put("/api/reports/:id", updateReport);
