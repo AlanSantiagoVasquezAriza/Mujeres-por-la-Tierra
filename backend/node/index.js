@@ -1,7 +1,5 @@
 import express from "express"; // node por defecto no reconoce modulos; en el package.json poner "type": "module"
 import cors from "cors";
-import reportRoutes from './routes/report.routes.js';
-
 
 import webRoutes from './routes/web.routes.js'
 
@@ -15,10 +13,6 @@ app.use(
 
 // Uso de las rutas
 app.use(webRoutes);
-app.use(reportRoutes);
 
 app.listen(4000);
 console.log(`server is running on port 4000`); // Template string
-
-
-
