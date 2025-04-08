@@ -1,5 +1,6 @@
 import { supabase } from "../supabase/client.js";
 
+
 export const createReport = async (req, res) => {
   const { title, description, category, created_by } = req.body;
 
