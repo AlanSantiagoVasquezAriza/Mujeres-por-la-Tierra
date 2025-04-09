@@ -1,89 +1,87 @@
 import { supabase } from "../supabase/client.js";
 
-export const checkUserDB = async (req, res) => {
+export const getCurrentUserController = async (req, res) => {
   try {
     const {
       data: { user },
     } = await supabase.auth.getUser();
-    res.send(user);
+
+    res.status(200).json(user);
   } catch (error) {
-    res.send(error);
+    console.error(error);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
-export const onLogout = async (req, res) => {
+export const logoutController = async (req, res) => {
   try {
     const { error } = await supabase.auth.signOut();
-    res.send(error);
+
+    if (error) return res.status(500).json({ message: error.message });
+
+    res.status(200).json({ message: "Sesión cerrada correctamente" });
   } catch (error) {
-    res.send(error);
-    console.log(error);
+    console.error("Logout error:", error);
+    res.status(500).json({ message: "Error al cerrar sesión" });
   }
 };
 
-export const onLoginByPassword = async (req, res) => {
+export const loginWithPasswordController = async (req, res) => {
   try {
     const { email, password } = req.body;
-    const { error } = await supabase.auth.signInWithPassword({
+
+    if (!email || !password) {
+      return res.status(400).json({ message: "Email y contraseña requeridos" });
+    }
+
+    const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
-    console.log(error);
-    res.send(error);
+
+    if (error) return res.status(401).json({ message: error.message });
+
+    res.status(200).json({ user: data.user });
   } catch (error) {
-    res.send(error);
-    console.log(error);
+    console.error("Login error:", error);
+    res.status(500).json({ message: "Error en el inicio de sesión" });
   }
 };
 
-export const onLoginByMagicLink = async (req, res) => {
+export const loginWithMagicLinkController = async (req, res) => {
   try {
     const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({ message: "Email requerido" });
+    }
+
     const { data, error } = await supabase.auth.signInWithOtp({ email });
-    res.send({ data, error });
+
+    if (error) return res.status(500).json({ message: error.message });
+
+    res.status(200).json({ message: "Enlace mágico enviado", data });
   } catch (error) {
-    res.send(error);
-    console.log(error);
+    console.error("Magic link login error:", error);
+    res.status(500).json({ message: "Error al enviar el enlace mágico" });
   }
 };
 
-export const onRegister = async (req, res) => {
+export const registerUserController = async (req, res) => {
   try {
     const { email, password } = req.body;
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-    });
-    res.send({ data, error });
-  } catch (error) {
-    res.send(error);
-    console.log(error);
-  }
-};
 
-// Prueba
+    if (!email || !password) {
+      return res.status(400).json({ message: "Email y contraseña requeridos" });
+    }
 
-export const onLogin = async (req, res) => {
-  try {
-    const { error, data } = await supabase.auth.signInWithPassword({
-      email: "wodawi8582@movfull.com",
-      password: "nnnnnn",
-    });
-    res.send(data);
-    console.log("Estoy en onLogin");
-  } catch (error) {
-    res.send(error);
-    console.log("Ocurrio un error en login", error);
-  }
-};
+    const { data, error } = await supabase.auth.signUp({ email, password });
 
-export const get = async (req, res) => {
-  try {
-    const { data, error } = await supabase.from("prueba").select("*");
-    res.send(data);
-    console.log(data, error);
-    console.log("holaaaaa desde get");
+    if (error) return res.status(400).json({ data, error });
+
+    res.status(201).json({ message: "Usuario registrado", user: data.user });
   } catch (error) {
-    res.send(error);
+    console.error("Registration error:", error);
+    res.status(500).json({ message: "Error al registrar usuario" });
   }
 };

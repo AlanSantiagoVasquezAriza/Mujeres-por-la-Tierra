@@ -1,32 +1,24 @@
 import { Router } from "express";
 import {
-  get,
-  checkUserDB,
-  onLogin,
-  onLogout,
-  onLoginByPassword,
-  onLoginByMagicLink,
-  onRegister,
+  getCurrentUserController,
+  loginWithMagicLinkController,
+  loginWithPasswordController,
+  logoutController,
+  registerUserController,
 } from "../controllers/web.controllers.js";
 
 const router = Router();
 
 // Endpoints
 
-router.get("/api/checkUserDB", checkUserDB);
+router.get("/auth/user", getCurrentUserController);
 
-router.get("/api/onLogout", onLogout);
+router.get("/auth/logout", logoutController);
 
-router.post("/api/onLogin/password", onLoginByPassword);
+router.post("/auth/login/password", loginWithPasswordController);
 
-router.post("/api/onLogin/magic-link", onLoginByMagicLink);
+router.post("/auth/login/magic-link", loginWithMagicLinkController);
 
-router.post("/api/onRegister", onRegister);
-
-// Prueba
-
-router.get("/api/onLogin", onLogin);
-
-router.get("/api/get", get);
+router.post("/auth/register", registerUserController);
 
 export default router;

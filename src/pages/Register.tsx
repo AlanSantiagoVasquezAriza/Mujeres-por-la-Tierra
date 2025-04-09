@@ -17,8 +17,8 @@ export function Register() {
 
     const { data } = await register({ email, password });
 
-    if (data.data.error) {
-      setErrorMsg(data.data.error.message);
+    if (data.error) {
+      setErrorMsg(data.error.message);
     } else {
       setSuccessMsg(
         "¡Registro exitoso! Revisa tu correo para confirmar tu cuenta."
