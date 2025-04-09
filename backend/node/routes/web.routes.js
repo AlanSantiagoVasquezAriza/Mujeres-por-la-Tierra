@@ -13,20 +13,24 @@ const router = Router();
 
 // Endpoints
 
-router.get("/api/checkUserDB", checkUserDB);
+// Rutas para /checkUserDB
+router.route("/checkUserDB").get(checkUserDB);
 
-router.get("/api/onLogout", onLogout);
+// Rutas para /onLogout
+router.route("/onLogout").get(onLogout);
 
-router.post("/api/onLogin/password", onLoginByPassword);
+// Rutas para /onLogin/password 
+router.route("/onLogin/password").post(onLoginByPassword);
 
-router.post("/api/onLogin/magic-link", onLoginByMagicLink);
+// Rutas para /onLogin/magic-link
+router.route("/onLogin/magic-link").post(onLoginByMagicLink);
 
-router.post("/api/onRegister", onRegister);
+// Rutas para /onRegister
+router.route("/onRegister").post(onRegister);
+
 
 // Prueba
-
-router.get("/api/onLogin", onLogin);
-
-router.get("/api/get", get);
+router.get("/onLogin", onLogin);
+router.get("/get", get);
 
 export default router;
