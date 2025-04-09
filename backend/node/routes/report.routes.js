@@ -3,12 +3,14 @@ import { createReport, getReports, updateReport, deleteReport} from "../controll
 
 const router = Router();
 
-router.post("/api/reports", createReport);
+// Rutas para /api/reports
+router.route("/")
+  .get(getReports)
+  .post(createReport);
 
-  
-router.get("/api/reports", getReports);
-router.delete("/api/reports/:id", deleteReport);
-router.put("/api/reports/:id", updateReport);
-
+// Rutas para /api/reports/:id
+router.route("/:id")
+  .delete(deleteReport)
+  .put(updateReport);
 
 export default router;
