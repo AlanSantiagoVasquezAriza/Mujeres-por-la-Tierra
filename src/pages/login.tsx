@@ -1,24 +1,25 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { supabase } from '../supabase/client.ts';
+import { checkUser, loginByPassword, loginByMagicLink } from "../api/users.ts";
+import { supabase } from "../supabase/client.ts";
 
-function Login() {
+export function Login() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [authMethod, setAuthMethod] = useState<"password" | "magic-link">("password");
-
+  const [authMethod, setAuthMethod] = useState<"password" | "magic-link">(
+    "password"
+  );
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     try {
       if (authMethod === "password") {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) throw error;
+        await loginByPassword({ email, password });
         navigate("/");
       } else {
-        const { error } = await supabase.auth.signInWithOtp({ email });
-        if (error) throw error;
+        await supabase.auth.signInWithOtp({ email });
+        // await loginByMagicLink({ email });
         alert("Revisa tu correo para el enlace mágico ✨");
       }
     } catch (error: any) {
@@ -26,13 +27,14 @@ function Login() {
     }
   };
 
+  const checkUserExists = async () => {
+    const user = await checkUser();
+    if (user.data) navigate("/");
+  };
+
   useEffect(() => {
-    const checkUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user) navigate("/");
-    };
-    checkUser();
-  }, [navigate]);
+    checkUserExists();
+  }, []);
 
   return (
     <div>
@@ -88,5 +90,3 @@ function Login() {
     </div>
   );
 }
-
-export default Login;

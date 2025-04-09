@@ -1,32 +1,28 @@
-import { supabase } from "../supabase/client";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { checkUser, logout } from "../api/users.ts";
 
-function Home() {
-    const navigate = useNavigate();
+export function Home() {
+  const navigate = useNavigate();
 
-    useEffect(() => {
-        const checkUser = async () => {
-            const { data: { user } } = await supabase.auth.getUser();
-            if (!user) {
-                navigate('/login'); 
-            }
-        };
+  const checkUserExists = async () => {
+    const user = await checkUser();
+    if (!user.data) navigate("/login");
+  };
 
-        checkUser();
-    }, [navigate]);
+  useEffect(() => {
+    checkUserExists();
+  }, []);
 
-    const handleLogout = async () => {
-        await supabase.auth.signOut();
-        navigate('/login'); // redirige al login después del logout
-    };
+  const handleLogout = async () => {
+    await logout();
+    navigate("/login"); // redirige al login después del logout
+  };
 
-    return (
-        <div>
-            Home
-            <button onClick={handleLogout}>Logout</button>
-        </div>
-    );
+  return (
+    <div>
+      Home
+      <button onClick={handleLogout}>Logout</button>
+    </div>
+  );
 }
-
-export default Home;

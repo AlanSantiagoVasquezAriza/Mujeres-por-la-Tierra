@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { supabase } from "../supabase/client";
 import { useNavigate } from "react-router-dom";
+import { register } from "../api/users.ts";
 
-function Register() {
+export function Register() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -14,15 +15,14 @@ function Register() {
     setErrorMsg("");
     setSuccessMsg("");
 
-    const { data: _, error } = await supabase.auth.signUp({
-      email,
-      password,
-    });
+    const { data } = await register({ email, password });
 
-    if (error) {
-      setErrorMsg(error.message);
+    if (data.data.error) {
+      setErrorMsg(data.data.error.message);
     } else {
-      setSuccessMsg("¡Registro exitoso! Revisa tu correo para confirmar tu cuenta.");
+      setSuccessMsg(
+        "¡Registro exitoso! Revisa tu correo para confirmar tu cuenta."
+      );
       // Opcional: Redirigir tras unos segundos
       setTimeout(() => navigate("/login"), 3000);
     }
@@ -52,5 +52,3 @@ function Register() {
     </div>
   );
 }
-
-export default Register;
