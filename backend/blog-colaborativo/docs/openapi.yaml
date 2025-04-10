@@ -1,0 +1,112 @@
+openapi: 3.0.0
+info:
+  title: Blog Colaborativo - API
+  version: 1.0.0
+  description: API del microservicio para crear, listar y aprobar artículos de activismo climático.
+servers:
+  - url: http://localhost:3000/api/v1
+    description: Servidor local de desarrollo
+
+tags:
+  - name: Artículos
+    description: Operaciones relacionadas con artículos del blog
+
+paths:
+  /articles:
+    post:
+      summary: Crear un nuevo artículo
+      description: Permite a una usuaria autenticada crear un artículo nuevo en estado pendiente.
+      operationId: createArticle
+      security:
+        - bearerAuth: []
+      tags:
+        - Artículos
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - title
+                - content
+              properties:
+                title:
+                  type: string
+                  example: "Impacto del cambio climático"
+                content:
+                  type: string
+                  example: "Este artículo explora los efectos del cambio climático..."
+      responses:
+        '201':
+          description: Artículo creado correctamente
+        '400':
+          description: Faltan datos requeridos
+        '401':
+          description: No autorizado
+        '422':
+          description: Errores de validación
+
+    get:
+      summary: Obtener todos los artículos
+      description: Devuelve una lista de todos los artículos, con opción de filtrado por estado.
+      operationId: getAllArticles
+      tags:
+        - Artículos
+      parameters:
+        - in: query
+          name: status
+          schema:
+            type: string
+          description: Filtrar artículos por estado (approved, pending, rejected)
+      responses:
+        '200':
+          description: Lista de artículos
+
+  /articles/{id}/approve:
+    patch:
+      summary: Aprobar o rechazar un artículo (admin)
+      description: Permite a una administradora cambiar el estado de un artículo a 'approved' o 'rejected'.
+      operationId: approveOrRejectArticle
+      security:
+        - bearerAuth: []
+      tags:
+        - Artículos
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - status
+              properties:
+                status:
+                  type: string
+                  enum: [approved, rejected]
+                  example: approved
+      responses:
+        '200':
+          description: Artículo aprobado o rechazado
+        '400':
+          description: Estado inválido
+        '401':
+          description: No autorizado
+        '403':
+          description: Acceso denegado (no es admin)
+        '404':
+          description: Artículo no encontrado
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

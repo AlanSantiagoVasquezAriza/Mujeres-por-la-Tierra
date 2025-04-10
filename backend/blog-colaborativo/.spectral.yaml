@@ -1,0 +1,18 @@
+extends: [spectral:oas]
+
+rules:
+  info-contact: off
+  info-description: error
+  operation-description: error
+  operation-tags: error
+  path-params: error
+
+  no-verbs-in-paths:
+    description: "No uses verbos en los paths (usa recursos, no acciones)"
+    message: "Evita usar verbos en las rutas"
+    severity: error
+    given: "$.paths[*]~"
+    then:
+      function: pattern
+      functionOptions:
+        notMatch: "^/(get|create|update|delete|add|set)[a-zA-Z0-9]*"

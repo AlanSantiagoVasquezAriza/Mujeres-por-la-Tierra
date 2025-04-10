@@ -1,0 +1,162 @@
+openapi: 3.1.0
+info:
+  title: API - Biblioteca de Recursos
+  description: API RESTful para gestionar recursos educativos sobre activismo ambiental.
+  version: 1.0.0
+  contact:
+    name: Equipo Mujeres por la Tierra
+    url: https://github.com/AlanSantiagoVasquezAriza/Mujeres-por-la-Tierra
+
+servers:
+  - url: http://localhost:3002/api/v1
+    description: Servidor local de desarrollo
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Recurso:
+      type: object
+      properties:
+        
+        titulo:
+          type: string
+        descripcion:
+          type: string
+        url_archivo:
+          type: string
+          format: uri
+        categoria:
+          type: string
+        creado_por:
+          type: string
+      required: [titulo, url_archivo, creado_por]
+
+security:
+  - bearerAuth: []
+
+tags:
+  - name: Recursos
+    description: Operaciones CRUD para recursos de la biblioteca
+
+paths:
+  /recursos:
+    get:
+      tags: [Recursos]
+      summary: Obtener lista de recursos
+      description: Devuelve una lista de recursos disponibles con soporte de filtros y paginación.
+      operationId: listarRecursos
+      parameters:
+        - name: categoria
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: orden
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: limite
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: desde
+          in: query
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Lista de recursos obtenida correctamente
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Recurso'
+
+    post:
+      tags: [Recursos]
+      summary: Crear un nuevo recurso
+      description: Crea un nuevo recurso en la biblioteca. Requiere autenticación de administradora.
+      operationId: crearRecurso
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Recurso'
+      responses:
+        '201':
+          description: Recurso creado correctamente
+        '422':
+          description: Error de validación
+
+  /recursos/{id}:
+    get:
+      tags: [Recursos]
+      summary: Obtener un recurso por ID
+      description: Obtiene los detalles de un recurso específico usando su ID.
+      operationId: obtenerRecursoPorId
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Recurso encontrado
+        '404':
+          description: Recurso no encontrado
+
+    put:
+      tags: [Recursos]
+      summary: Actualizar un recurso por ID
+      description: Actualiza la información de un recurso existente. Requiere rol de administradora.
+      operationId: actualizarRecurso
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Recurso'
+      responses:
+        '200':
+          description: Recurso actualizado correctamente
+        '404':
+          description: Recurso no encontrado
+
+    delete:
+      tags: [Recursos]
+      summary: Eliminar un recurso por ID
+      description: Elimina un recurso de la biblioteca usando su ID. Solo administradoras autorizadas.
+      operationId: eliminarRecurso
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Recurso eliminado correctamente
+        '404':
+          description: Recurso no encontrado
