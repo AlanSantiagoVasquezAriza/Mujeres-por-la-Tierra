@@ -2,11 +2,11 @@ import express from "express"; // node por defecto no reconoce modulos; en el pa
 import cors from "cors";
 import morgan from 'morgan'; // Importar morgan para registrar solicitudes HTTP
 import dotenv from 'dotenv'; // Importar dotenv para manejar variables de entorno
-import connectDB from './config/database.js'; // Importar función para conectar a la base de datos
 import webRoutes from './routes/web.routes.js'; // Importar rutas web
-import eventRoutes from './routes/event.routes.js'; // Importar rutas de eventos
 import reportRoutes from './routes/report.routes.js'; // Importar rutas de reportes
-import notificationRoutes from './routes/APIlocations.routes.js'; // Importar rutas de notificaciones (API)
+
+import locationRoutes from './routes/APIlocations.routes.js'; // Importar rutas de notificaciones (API)
+import calendarRoutes from './routes/APIcalendario.routes.js'; // Importar rutas de calendario (API)
 //-------------------------------------------------------------------------------------------------------------------------------------------
 
 const app = express();
@@ -18,8 +18,8 @@ app.use(morgan('dev')); // Registrar solicitudes HTTP en la consola
 app.use(express.urlencoded({ extended: false })); // Permite procesar datos url-encoded (formulario HTML)
 
 // Rutas 
-app.use("/api/location", notificationRoutes); // Nuevas rutas para el microservicio de notificaciones
-app.use("/api/events", eventRoutes); // Rutas para eventos
+app.use("/api/location", locationRoutes); // Nuevas rutas para el microservicio de notificaciones
+app.use("/api/calendar", calendarRoutes); // Nuevas rutas para el microservicio de calendario
 app.use("/api/reports", reportRoutes);
 app.use("/api/web", webRoutes); // Rutas para la aplicación web
 
@@ -28,10 +28,6 @@ dotenv.config();
 
 // Inicializar Express
 const PORT = 3000;
-
-// Conectar a la base de datos
-connectDB();
-
 
 // Middleware para manejo de errores
 app.use((err, req, res, next) => {
